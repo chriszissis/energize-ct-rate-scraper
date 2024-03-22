@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 
 from discord import SyncWebhook
 
+
 # temp for testing
 import random
 
@@ -14,14 +15,16 @@ from selenium.webdriver.chrome.options import Options
 
 dict = {}
 
+# energize CT URL
 URL = "https://energizect.com/rate-board/compare-energy-supplier-rates?customerClass=1201&monthlyUsage=750&planTypeEdc=1191"
 
 # Set options for selenium and scrape page
 options = Options()
-options.add_argument("--headless=new")
+options.add_argument("--headless=new") #headless so we dont see the browser window
 driver = webdriver.Chrome(options=options)
 driver.get(URL)
-time.sleep(2)
+
+time.sleep(2) #wait for the JS to actually do its thing
 
 soup = BeautifulSoup(driver.page_source, "html.parser")
 driver.close()
@@ -31,6 +34,7 @@ all_list_items = soup.find_all(class_="list-item__content")
 text = "Offer Rate"
 text2 = "Plan Description"
 
+# loop over all divs container supplier info
 for divs in all_list_items:
     suppliername_container = divs.find(class_="list-item__title")
     suppliername = suppliername_container.next_element.next_element
@@ -48,9 +52,14 @@ for divs in all_list_items:
 
 lowest_options = {k: v for k, v in dict.items() if v == min(dict.values())}
 
+formatted_output = "**The lowest rate(s) is/are:** \n" + str(lowest_options)
 
+
+
+#send to discord
 #webhook = SyncWebhook.from_url("https://discordapp.com/api/webhooks/1220172794051170444/JIK4F1wuWzSlBEIfL6Ue3WNmJxwSLksvOjfaY7kDxPJ5z7cPzMlxoB86a9K5OBcxxFiw")
-#webhook.send(lowest_options)
+webhook = SyncWebhook.from_url("https://discordapp.com/api/webhooks/1220550641043378176/b8q4jrtB4AUtfxrHdive8gjbBvOYHeiRDMcfL4im_6GK9NZuL3ezmQ7e-hiVljDtQ5g3")
+webhook.send(formatted_output)
 
 
 
