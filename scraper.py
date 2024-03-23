@@ -2,16 +2,12 @@
 import requests
 import time
 from bs4 import BeautifulSoup
-
 from discord import SyncWebhook
-
-
-# temp for testing
-import random
 
 # Use selenium to get page after JS has actually modified page
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+
 
 dict = {}
 
@@ -53,8 +49,6 @@ for divs in all_list_items:
 lowest_options = {k: v for k, v in dict.items() if v == min(dict.values())}
 
 formatted_output = "**The lowest rate(s) is/are:** \n" + str(lowest_options)
-
-
 
 #send to discord
 #webhook = SyncWebhook.from_url("https://discordapp.com/api/webhooks/1220172794051170444/JIK4F1wuWzSlBEIfL6Ue3WNmJxwSLksvOjfaY7kDxPJ5z7cPzMlxoB86a9K5OBcxxFiw")
